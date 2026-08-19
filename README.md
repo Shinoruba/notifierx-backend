@@ -36,8 +36,13 @@ notifierx-backend/
 To clone and run, ensure your machine meets the following environment baselines:
 
 * **Java Development Kit:** JDK 21 (LTS)
+* **Language:** Java 21 (LTS)
 * **Build Tooling:** Apache Maven 3.9+
-* **Containerization:** Docker Desktop (WSL 2 backend enabled)
+* **Framework:** Spring Boot 3.x / 4.x (Spring Web, Spring Data JPA, Spring Data Redis, Validation)
+* **Persistence:** PostgreSQL 16 (Relational System of Record & Audit Ledger)
+* **Caching / Concurrency:** Redis 7 (Distributed Token Bucket via compiled Lua scripts)
+* **Containerization:** Docker & Docker Compose
+* **Testing:** JUnit 5, Mockito, TestRestTemplate, WebMvcTest (84 Automated Tests)
 
 ### Getting Started
 
