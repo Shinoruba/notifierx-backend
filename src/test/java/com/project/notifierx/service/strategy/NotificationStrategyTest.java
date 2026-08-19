@@ -22,14 +22,45 @@ class NotificationStrategyTest {
         }
 
         @Test
-        @DisplayName("send() succeeds for a valid email address")
+        @DisplayName("send() succeeds for a valid email address via primary provider")
         void send_succeeds_forValidRecipient() {
             NotificationResult result = strategy.send("user@example.com", "Hello!");
 
             assertThat(result.success()).isTrue();
-            assertThat(result.providerMessageId()).startsWith("email-");
+            assertThat(result.providerMessageId()).startsWith("email-primary-");
             assertThat(result.errorMessage()).isNull();
             assertThat(result.dispatchedAt()).isNotNull();
+        }
+
+        @Test
+        @DisplayName("send() seamlessly routes to fallback provider when primary fails")
+        void send_fallsBackToSecondaryProvider_whenPrimaryFails() {
+            strategy.setSimulatePrimaryFailure(true);
+            try {
+                NotificationResult result = strategy.send("user@example.com", "Hello!");
+
+                assertThat(result.success()).isTrue();
+                assertThat(result.providerMessageId()).startsWith("email-fallback-");
+                assertThat(result.errorMessage()).isNull();
+            } finally {
+                strategy.resetSimulation();
+            }
+        }
+
+        @Test
+        @DisplayName("send() reports failure when both primary and fallback providers fail")
+        void send_fails_whenBothProvidersFail() {
+            strategy.setSimulatePrimaryFailure(true);
+            strategy.setSimulateSecondaryFailure(true);
+            try {
+                NotificationResult result = strategy.send("user@example.com", "Hello!");
+
+                assertThat(result.success()).isFalse();
+                assertThat(result.providerMessageId()).isNull();
+                assertThat(result.errorMessage()).contains("All email providers failed");
+            } finally {
+                strategy.resetSimulation();
+            }
         }
 
         @Test
@@ -80,14 +111,45 @@ class NotificationStrategyTest {
         }
 
         @Test
-        @DisplayName("send() succeeds for an E.164 phone number")
+        @DisplayName("send() succeeds for an E.164 phone number via primary provider")
         void send_succeeds_forValidE164Recipient() {
             NotificationResult result = strategy.send("+12025550123", "Your OTP is 1234");
 
             assertThat(result.success()).isTrue();
-            assertThat(result.providerMessageId()).startsWith("sms-");
+            assertThat(result.providerMessageId()).startsWith("sms-primary-");
             assertThat(result.errorMessage()).isNull();
             assertThat(result.dispatchedAt()).isNotNull();
+        }
+
+        @Test
+        @DisplayName("send() seamlessly routes to fallback provider when primary fails")
+        void send_fallsBackToSecondaryProvider_whenPrimaryFails() {
+            strategy.setSimulatePrimaryFailure(true);
+            try {
+                NotificationResult result = strategy.send("+12025550123", "Your OTP is 1234");
+
+                assertThat(result.success()).isTrue();
+                assertThat(result.providerMessageId()).startsWith("sms-fallback-");
+                assertThat(result.errorMessage()).isNull();
+            } finally {
+                strategy.resetSimulation();
+            }
+        }
+
+        @Test
+        @DisplayName("send() reports failure when both primary and fallback providers fail")
+        void send_fails_whenBothProvidersFail() {
+            strategy.setSimulatePrimaryFailure(true);
+            strategy.setSimulateSecondaryFailure(true);
+            try {
+                NotificationResult result = strategy.send("+12025550123", "Your OTP is 1234");
+
+                assertThat(result.success()).isFalse();
+                assertThat(result.providerMessageId()).isNull();
+                assertThat(result.errorMessage()).contains("All SMS providers failed");
+            } finally {
+                strategy.resetSimulation();
+            }
         }
 
         @Test
@@ -182,6 +244,8 @@ class NotificationStrategyTest {
             assertThat(strategy.send("", "x").dispatchedAt()).isNotNull();
         }
     }
+
+    // ── NotificationResult record ─────────────────────────────────────────────
 
     @Nested
     @DisplayName("NotificationResult")

@@ -27,9 +27,9 @@ To maintain clean code and professional software design:
 
 ## 3. Incremental Roadmap
 * [x] **Milestone 0:** Infrastructure bootstrap (Docker, Postgres, Redis, App Config).
-* [ ] **Milestone 1:** Core Domain Models & Repositories (`User`, `Tier`, `ChannelType`, `NotificationAudit`).
-* [ ] **Milestone 2:** Redis-backed Token Bucket Rate Limiter.
-* [ ] **Milestone 3:** Strategy & Factory Dispatch Architecture with mock downstream providers.
-* [ ] **Milestone 4:** Notification Orchestration Service & Template Method Execution.
-* [ ] **Milestone 5:** REST Controllers, API Validation, & Global Exception Handler.
-* [ ] **Milestone 6:** Resiliency (Fallbacks/Retries) & Integration Tests.
+* [x] **Milestone 1:** Core Domain Models & Repositories (`User`, `Tier`, `ChannelType`, `NotificationAudit`).
+* [x] **Milestone 2:** Redis-backed Token Bucket Rate Limiter.
+* [x] **Milestone 3:** Strategy & Factory Dispatch Architecture with mock downstream providers.
+* [x] **Milestone 4:** Notification Orchestration Service & Template Method Execution.
+* [x] **Milestone 5:** REST Controllers, API Validation, & Global Exception Handler.
+* [x] **Milestone 6:** Resiliency (Fallbacks/Retries) & Integration Tests.
